@@ -15,24 +15,29 @@ class ThingCell: UITableViewCell {
         return label
     }()
     
-    let background = UIView(frame: .zero)
+    private let background = UIView(frame: .zero)
     var updateThingImage: ((UIImage?) -> (Void)) = { _ in }
     
-    var isLiked: Bool? = false {    
-        willSet {
-            self.updateLikeImage(check: newValue)
+    var isLiked: Bool? = false {
+        didSet {
+            self.updateLikeImage(check: isLiked)
         }
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
-        
-        nameLabel.text = "Undefined thing name"
  
         updateThingImage = { image in
             self.change(image: image, in: self.thingImage)
         }
         
+        initializeCellUI()
+        setConstraintsForComponents()
+        addShadow()
+        setupImageView()
+    }
+    
+    private func initializeCellUI() {
         background.backgroundColor = UIColor(white: 0.9, alpha: 0.1)
         contentView.addSubview(background)
         
@@ -43,7 +48,9 @@ class ThingCell: UITableViewCell {
         contentView.addSubview(nameLabel)
         contentView.addSubview(thingImage)
         contentView.addSubview(likeImage)
-        
+    }
+    
+    private func setConstraintsForComponents() {
         thingImage.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         likeImage.translatesAutoresizingMaskIntoConstraints = false
@@ -67,16 +74,13 @@ class ThingCell: UITableViewCell {
         background.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         background.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         background.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-        
-        addShadow()
-        setupImageView()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupImageView() {
+    private func setupImageView() {
         thingImage.backgroundColor = UIColor.clear
         thingImage.layer.masksToBounds = true
         thingImage.layer.cornerRadius = 10.0
@@ -90,24 +94,25 @@ class ThingCell: UITableViewCell {
         isLiked = withLikeValue
     }
     
-//    func animateAlphaLikeImage() {
-//        
-//        likeImage.alpha = 0.0
-//        UIView.animate(withDuration: 0.5) { 
-//            self.likeImage.alpha = 1.0
-//        }
-//    }
+    /*
+    func animateAlphaLikeImage() {
+        likeImage.alpha = 0.0
+        UIView.animate(withDuration: 0.5) {
+            self.likeImage.alpha = 1.0
+        }
+    }
+     */
     
     func setLikeImageWithAnimation(image: UIImage) {
         change(image: image, in: likeImage)
     }
     
-    private func updateLikeImage(check: @autoclosure () -> Bool?) {
-        if check() == true {
-            setLikeImageWithAnimation(image: #imageLiteral(resourceName: "likeO96"))
-        }
-        else if check() == false {
-            setLikeImageWithAnimation(image: #imageLiteral(resourceName: "dontlikeO96"))
+    private func updateLikeImage(check: Bool?) {
+        if let value = check {
+            let resourceName = value ? "likeO96" : "dontlikeO96"
+            setLikeImageWithAnimation(image: #imageLiteral(resourceName: resourceName))
+        } else {
+            likeImage.image = nil
         }
     }
     
@@ -116,7 +121,6 @@ class ThingCell: UITableViewCell {
     }
     
     private func addShadow() {
-        
         layer.shadowColor = UIColor.white.cgColor
         layer.shadowOffset = CGSize(width: 0.5, height: 1.0)
         layer.shadowOpacity = 0.5

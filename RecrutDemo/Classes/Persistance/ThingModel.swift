@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-struct ThingModel {
+class ThingModel {
     
     let name: String
     var like: Bool?
@@ -15,8 +15,7 @@ struct ThingModel {
         self.name = name
     }
     
-    mutating func setLike(value: Bool) {
-        
+    func setLike(value: Bool) {    
         like = value
         modelCell?.update(withLikeValue: value)
     }

@@ -11,13 +11,12 @@ func mockData() -> [ThingModel] {
 struct ItemsDatasource {
     
     var allItems = Array<ThingModel>()
+    
     init() {
-        
         getItemsFromFile()
     }
     
     mutating func getItemsFromFile() {
-        
         let path = Bundle.main.path(forResource: "entities", ofType: "json")
         let url = URL(fileURLWithPath: path!)
         let jsonData = try! Data(contentsOf: url)
@@ -30,13 +29,12 @@ struct ItemsDatasource {
                     let uuid = entityDict["uuid"] as! String
                     let name = entityDict["name"] as! String
                     
-                    var item = ThingModel(name: name)
+                    let item = ThingModel(name: name)
                     item.uuid = uuid
                     
                     let imageArray = entityDict["image"] as? Array<String>
                     let urlString = imageArray?.first
                     item.image = urlString
-                    print("\(item.name) \(urlString)")
                     allItems.append(item)
                 }
             }

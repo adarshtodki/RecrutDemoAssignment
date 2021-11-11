@@ -6,7 +6,7 @@ typealias DownloadCompletion = ((_ image: UIImage?, _ urlString: String) -> ())?
 class ImageProvider {
     
     private let networkLayer: NetworkLayer
-    private let queue = DispatchQueue(label: "imageDownloading")
+    private let queue = DispatchQueue(label: "imageDownloading", attributes: .concurrent)
     private let cache = ImageCache()
     
     init() {
@@ -16,16 +16,13 @@ class ImageProvider {
     func imageAsync(from urlString: String, completion: DownloadCompletion) {
         
         guard let url = URL(string: urlString) else {
-            
             completion?(nil, urlString)
             return
         }
         
-        var imageName = self.imageName(for: url)
+        let imageName = self.imageName(for: url)
         queue.async { [weak self] in
-            
             self?.downloadImage(from: url, saveAs: imageName, completion: { (image, urlString) in
-                
                 DispatchQueue.main.async { () -> Void in
                     completion?(image, urlString)
                 }
@@ -34,24 +31,28 @@ class ImageProvider {
     }
 
     private func downloadImage(from url: URL, saveAs imageName: String, completion: DownloadCompletion) {
+        let urlString = url.absoluteString
         
-        networkLayer.downloadFile(from: url, completion: { (locationURL, response, error) in
-            
-            let urlString = url.absoluteString
-            guard let location = locationURL else {
+        if let localImage = self.cache.fetchImage(remoteURL: url) {
+            completion?(localImage, urlString)
+        } else {
+            networkLayer.downloadFile(from: url, completion: { (locationURL, response, error) in
                 
-                completion?(nil, urlString)
-                return
-            }
-            
-            let name = self.cache.imageName(for: url)
-            let image = self.cache.storeImageInCache(from: location, imageName: name)
-            completion?(image, urlString)
-        })
+                guard let location = locationURL else {
+                    completion?(nil, urlString)
+                    return
+                }
+                
+                if let image = self.cache.storeImageInCache(from: location, remoteURL: url) {
+                    completion?(image, urlString)
+                } else {
+                    completion?(nil, urlString)
+                }
+            })
+        }
     }
     
     func imageName(for url: URL) -> String {
-        
         var imageName = url.lastPathComponent
         if let size = url.query {
             imageName = imageName + size

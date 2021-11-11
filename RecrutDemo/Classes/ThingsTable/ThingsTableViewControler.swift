@@ -30,7 +30,6 @@ class ThingsTableViewControler: UITableViewController, Transition {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewConstants.cellIdentifier) as? ThingCell else {
             fatalError("Cell not registered")
         }
@@ -51,7 +50,6 @@ class ThingsTableViewControler: UITableViewController, Transition {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         tableView.deselectRow(at: indexPath, animated: true)
         let thingModel = viewModel.thing(for: indexPath)
         pushDetailsViewController(thingModel)
@@ -78,73 +76,3 @@ extension ThingsTableViewControler: ThingDetailsDelegate {
         viewController.navigationController?.popViewController(animated: true)
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

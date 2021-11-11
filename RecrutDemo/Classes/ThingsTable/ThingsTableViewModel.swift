@@ -1,7 +1,6 @@
 import Foundation
 
 struct ThingsTableViewModel {
-    
     let imageProvider = ImageProvider()
     var things = mockData()
     var datasourceCount: Int {

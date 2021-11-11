@@ -2,15 +2,12 @@ import Foundation
 import UIKit
 
 protocol Transition {
-    
     func pushViewControler(_ viewController: UIViewController, animated: Bool)
     func popViewController(_ viewController: UIViewController, animated: Bool)
 }
 
 extension Transition where Self: UIViewController {
-    
     func pushViewControler(_ viewControler: UIViewController, animated: Bool) {
-        
         let transition = CATransition()
         transition.type = CATransitionType.push
         addChild(viewController: viewControler, to: self, with: self.view.bounds, animated: animated)

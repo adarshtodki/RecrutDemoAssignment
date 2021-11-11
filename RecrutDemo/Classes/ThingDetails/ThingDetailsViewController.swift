@@ -8,12 +8,7 @@ class ThingDetailsViewController: UIViewController {
     var imageProvider: ImageProvider!
     var delegate: ThingDetailsDelegate? = nil
     
-    convenience init() {
-        self.init(nibName: nil, bundle: nil)
-    }
-    
     override func loadView() {
-        
         view = baseView
         view.backgroundColor = UIColor.white
     }
@@ -21,8 +16,11 @@ class ThingDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     
+        initializeView()
+    }
+    
+    private func initializeView() {
         title = thingModel.name
-        
         baseView.likeButton.addTarget(self, action: #selector(didTapLikeButton), for: .touchUpInside)
         baseView.dislikeButton.addTarget(self, action: #selector(didTapDislikeButton), for: .touchUpInside)
         displayImage()
@@ -31,13 +29,12 @@ class ThingDetailsViewController: UIViewController {
     @objc func didTapLikeButton() {
         delegate?.thingDetails(viewController: self, didLike: &thingModel!)
     }
-    @objc
-    func didTapDislikeButton() {
+    
+    @objc func didTapDislikeButton() {
         delegate?.thingDetails(viewController: self, didDislike: &thingModel!)
     }
     
-    func displayImage() {
-        
+    private func displayImage() {
         if let urlString = thingModel.image {
             imageProvider.imageAsync(from: urlString, completion: { (image, imageUrl) in
                 self.baseView.setThing(image: image)
