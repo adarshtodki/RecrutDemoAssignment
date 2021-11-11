@@ -4,29 +4,25 @@ import UIKit
 class ThingsTableViewControler: UITableViewController, Transition {
     
     struct TableViewConstants {
-        
         static let cellIdentifier = "Cell"
         static let rowHeight: CGFloat = 60
         static let estimatedRowHeight: CGFloat = 180
     }
     
     var viewModel = ThingsTableViewModel()
-    
-    convenience init() {
-        self.init(nibName: nil, bundle: nil)
-    }
-    
-    override func loadView() {
-        super.loadView()
-    }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        initializeTableView()
+    }
+    
+    private func initializeTableView() {
         tableView.estimatedRowHeight = TableViewConstants.estimatedRowHeight
         tableView.rowHeight = TableViewConstants.rowHeight
         tableView.separatorColor = UIColor.black
         tableView.separatorStyle = .singleLine
+        tableView.register(ThingCell.self, forCellReuseIdentifier: TableViewConstants.cellIdentifier)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -35,24 +31,23 @@ class ThingsTableViewControler: UITableViewController, Transition {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        var cell: ThingCell? = tableView.dequeueReusableCell(withIdentifier: TableViewConstants.cellIdentifier) as? ThingCell
-        
-        if cell == nil {
-            cell = ThingCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewConstants.cellIdentifier) as? ThingCell else {
+            fatalError("Cell not registered")
         }
-        viewModel.bindModelWithView(cell: cell!, at: indexPath)
+        
+        viewModel.bindModelWithView(cell: cell, at: indexPath)
         
         let thingModel = viewModel.thing(for: indexPath)
-        cell?.update(withText: thingModel.name)
-        cell?.update(withLikeValue: thingModel.like)
+        cell.update(withText: thingModel.name)
+        cell.update(withLikeValue: thingModel.like)
         
         if let urlString = thingModel.image {
             viewModel.imageProvider.imageAsync(from: urlString, completion: { (image, imageUrl) in
-                cell?.updateThingImage(image)
+                cell.updateThingImage(image)
             })
         }
         
-        return cell!
+        return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -82,10 +77,6 @@ extension ThingsTableViewControler: ThingDetailsDelegate {
     func thingDetails(viewController: ThingDetailsViewController, didDislike thingModel: inout ThingModel) {
         
         thingModel.setLike(value: false)
-        popViewController(viewController, animated: true)
-    }
-    
-    func thingDetails(viewController: ThingDetailsViewController, willDismiss thingModel: inout ThingModel) {
         popViewController(viewController, animated: true)
     }
 }

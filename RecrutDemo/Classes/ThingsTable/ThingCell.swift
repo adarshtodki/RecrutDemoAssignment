@@ -27,6 +27,12 @@ class ThingCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         
+        nameLabel.text = "Undefined thing name"
+ 
+        updateThingImage = { image in
+            self.change(image: image, in: self.thingImage)
+        }
+        
         background.backgroundColor = UIColor(white: 0.9, alpha: 0.1)
         contentView.addSubview(background)
         
@@ -38,16 +44,6 @@ class ThingCell: UITableViewCell {
         contentView.addSubview(thingImage)
         contentView.addSubview(likeImage)
         addShadow()
-    }
-    
-    convenience init() {
-        self.init(style: .default, reuseIdentifier: "")
-
-        nameLabel.text = "Undefined thing name"
- 
-        updateThingImage = { image in
-            self.change(image: image, in: self.thingImage)
-        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -110,14 +106,7 @@ class ThingCell: UITableViewCell {
     }
     
     private func change(image: UIImage?, in imageView: UIImageView, animated: Bool = true) {
-        
-        let transition = CATransition()
-        transition.duration = 0.8
-        transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
-        transition.type = CATransitionType.fade
-    
         imageView.image = image
-        imageView.layer.add(transition, forKey: nil)
     }
     
     private func addShadow() {

@@ -28,10 +28,6 @@ class ThingDetailsViewController: UIViewController {
         displayImage()
     }
     
-    @objc func didTapCloseButton() {
-        delegate?.thingDetails(viewController: self, willDismiss: &thingModel!)
-    }
-    
     @objc func didTapLikeButton() {
         delegate?.thingDetails(viewController: self, didLike: &thingModel!)
     }
