@@ -15,10 +15,7 @@ class ThingDetailsView: UIView {
         addSubview(imageView)
         
         likeButton.setImage(#imageLiteral(resourceName: "likeO96"), for: .normal)
-        //addSubview(likeButton)
-        
         dislikeButton.setImage(#imageLiteral(resourceName: "dontlikeO96"), for: .normal)
-        //addSubview(dislikeButton)
         
         buttons.addArrangedSubview(likeButton)
         buttons.addArrangedSubview(dislikeButton)
@@ -46,7 +43,7 @@ class ThingDetailsView: UIView {
         
         let padding: CGFloat = 20.0
         let imageSize: CGFloat = 300.0
-        imageView.topAnchor.constraint(equalTo: topAnchor, constant: 70.0).isActive = true
+        imageView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor, constant: padding).isActive = true
         imageView.leftAnchor.constraint(equalTo: leftAnchor, constant: padding).isActive = true
         imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: imageSize).isActive = true

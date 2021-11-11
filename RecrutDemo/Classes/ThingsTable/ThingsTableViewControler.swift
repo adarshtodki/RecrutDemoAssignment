@@ -66,18 +66,16 @@ class ThingsTableViewControler: UITableViewController, Transition {
     }
 }
 
+// MARK: - ThingDetailsDelegate Extension
 extension ThingsTableViewControler: ThingDetailsDelegate {
-
     func thingDetails(viewController: ThingDetailsViewController, didLike thingModel: inout ThingModel) {
-        
         thingModel.setLike(value: true)
-        popViewController(viewController, animated: true)
+        viewController.navigationController?.popViewController(animated: true)
     }
     
     func thingDetails(viewController: ThingDetailsViewController, didDislike thingModel: inout ThingModel) {
-        
         thingModel.setLike(value: false)
-        popViewController(viewController, animated: true)
+        viewController.navigationController?.popViewController(animated: true)
     }
 }
 

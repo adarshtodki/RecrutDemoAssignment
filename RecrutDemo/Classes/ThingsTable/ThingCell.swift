@@ -17,8 +17,8 @@ class ThingCell: UITableViewCell {
     
     let background = UIView(frame: .zero)
     var updateThingImage: ((UIImage?) -> (Void)) = { _ in }
-    var isLiked: Bool? = false {
-        
+    
+    var isLiked: Bool? = false {    
         willSet {
             self.updateLikeImage(check: newValue)
         }
@@ -43,32 +43,40 @@ class ThingCell: UITableViewCell {
         contentView.addSubview(nameLabel)
         contentView.addSubview(thingImage)
         contentView.addSubview(likeImage)
+        
+        thingImage.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        likeImage.translatesAutoresizingMaskIntoConstraints = false
+        background.translatesAutoresizingMaskIntoConstraints = false
+        
+        thingImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
+        thingImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        thingImage.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        thingImage.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        nameLabel.leadingAnchor.constraint(equalTo: thingImage.trailingAnchor, constant: 20).isActive = true
+        nameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        nameLabel.trailingAnchor.constraint(greaterThanOrEqualTo: likeImage.leadingAnchor).isActive = true
+        
+        likeImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20).isActive = true
+        likeImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        likeImage.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        likeImage.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        background.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        background.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        background.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        background.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        
         addShadow()
+        setupImageView()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-    
-        let origin = CGPoint(x: 80.0, y: 10.5)
-        let size = CGSize(width: bounds.width - origin.x, height: bounds.height)
-        nameLabel.frame = CGRect(origin: origin, size: size)
-        
-        let imageOrigin = CGPoint(x: 10.0, y: 5.5)
-        let imageSize = CGSize(width: 50.0, height: 50.0)
-        thingImage.frame = CGRect(origin: imageOrigin, size: imageSize)
-        
-        let likeOrigin = CGPoint(x: bounds.width - 50.5, y: 10.5)
-        let likeSize = CGSize(width: 40.0, height: 40.0)
-        likeImage.frame = CGRect(origin: likeOrigin, size: likeSize)
-        
-        background.frame = bounds
-    }
-    
     func setupImageView() {
-        
         thingImage.backgroundColor = UIColor.clear
         thingImage.layer.masksToBounds = true
         thingImage.layer.cornerRadius = 10.0
@@ -91,12 +99,10 @@ class ThingCell: UITableViewCell {
 //    }
     
     func setLikeImageWithAnimation(image: UIImage) {
-
         change(image: image, in: likeImage)
     }
     
     private func updateLikeImage(check: @autoclosure () -> Bool?) {
-        
         if check() == true {
             setLikeImageWithAnimation(image: #imageLiteral(resourceName: "likeO96"))
         }
