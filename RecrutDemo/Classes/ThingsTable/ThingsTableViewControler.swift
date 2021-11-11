@@ -63,13 +63,11 @@ class ThingsTableViewControler: UITableViewController, Transition {
     }
     
     func pushDetailsViewController(_ thingModel: ThingModel) {
-        
         let detailsViewController = ThingDetailsViewController()
         detailsViewController.thingModel = thingModel
         detailsViewController.imageProvider = viewModel.imageProvider
         detailsViewController.delegate = self
-        let navigationContorller = UINavigationController(rootViewController: detailsViewController)
-        pushViewControler(navigationContorller, animated: true)
+        self.navigationController?.pushViewController(detailsViewController, animated: true)
     }
 }
 

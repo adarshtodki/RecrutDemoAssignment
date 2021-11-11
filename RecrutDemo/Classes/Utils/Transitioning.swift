@@ -54,29 +54,3 @@ extension Transition where Self: UIViewController {
         }
     }
 }
-
-protocol Navigation {
-    
-    func setup()
-}
-
-extension Navigation where Self: UIViewController {
-    
-    func setup() {
-        
-        let backArrow = #imageLiteral(resourceName: "backChevron").withRenderingMode(.alwaysTemplate)
-        let backButton = UIBarButtonItem(image: backArrow, style: .plain, target: self, action: #selector(ThingDetailsViewController.didTapCloseButton))
-        self.navigationItem.leftBarButtonItem = backButton
-        self.navigationController?.navigationBar.tintColor = UIColor.black
-    }
-}
-
-extension ThingDetailsViewController: Navigation {
-    
-}
-
-
-
-
-
-

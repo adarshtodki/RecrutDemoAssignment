@@ -25,7 +25,6 @@ class ThingDetailsViewController: UIViewController {
         
         baseView.likeButton.addTarget(self, action: #selector(didTapLikeButton), for: .touchUpInside)
         baseView.dislikeButton.addTarget(self, action: #selector(didTapDislikeButton), for: .touchUpInside)
-        setup()
         displayImage()
     }
     
